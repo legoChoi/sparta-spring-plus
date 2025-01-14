@@ -31,11 +31,12 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateToken(Long id, String nickname, UserRole role) {
+    public String generateToken(Long id, String email, String nickname, UserRole role) {
         Date now = new Date();
 
         return BEARER_PREFIX + Jwts.builder()
                 .claim("id", id.toString())
+                .claim("email", email)
                 .claim("nickname", nickname)
                 .claim("role", role.name())
                 .setIssuedAt(now)
@@ -78,6 +79,12 @@ public class JwtUtil {
 
     public User getUserFromToken(String token) {
         Claims claims = extractClaims(token);
-        return User.fromJwt(Long.valueOf(claims.get("id", String.class)), claims.get("nickname", String.class), claims.get("role", String.class));
+
+        return User.builder()
+                .id(Long.valueOf(claims.get("id", String.class)))
+                .email(claims.get("email", String.class))
+                .nickname(claims.get("nickname", String.class))
+                .userRole(UserRole.of(claims.get("role", String.class)))
+                .build();
     }
 }

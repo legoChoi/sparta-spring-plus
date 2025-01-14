@@ -1,11 +1,12 @@
 package org.example.expert.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.user.enums.UserRole;
+import org.example.expert.security.entity.CustomUserDetails;
 
 @Getter
 @Entity
@@ -29,24 +30,26 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
-    private User(Long id, UserRole userRole, String nickname) {
-        this.id = id;
-        this.nickname = nickname;
-        this.userRole = userRole;
-    }
-
     private User(Long id, String email, UserRole userRole) {
         this.id = id;
         this.email = email;
         this.userRole = userRole;
     }
 
-    public static User fromJwt(Long id, String nickname, String role) {
-        return new User(id, UserRole.of(role), nickname);
+    @Builder
+    private User(Long id, String email, String nickname, UserRole userRole) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+        this.userRole = userRole;
     }
 
-    public static User fromAuthUser(AuthUser authUser) {
-        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserRole());
+    public static User fromJwt(Long id, String email, String role) {
+        return new User(id, email, UserRole.of(role));
+    }
+
+    public static User fromUserDetails(CustomUserDetails customUserDetails) {
+        return new User(customUserDetails.getId(), customUserDetails.getEmail(), customUserDetails.getUsername(), customUserDetails.getUserRole());
     }
 
     public void changePassword(String password) {
