@@ -2,6 +2,7 @@ package org.example.expert.security.entity;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.user.entity.User;
+import org.example.expert.domain.user.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -53,5 +54,9 @@ public class CustomUserDetails implements UserDetails {
 
     public Long getId() {
         return user.getId();
+    }
+
+    public UserRole getUserRole() {
+        return user.getUserRole();
     }
 }

@@ -25,14 +25,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        CustomUserDetails userDetailsCustom = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
 
-        if (!passwordEncoder.matches(password, userDetailsCustom.getPassword())) {
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             log.warn("login error: password mismatch");
             throw new BadCredentialsException("유효하지 않은 비밀번호입니다.");
         }
 
-        return new UsernamePasswordAuthenticationToken(userDetailsCustom, null, userDetailsCustom.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override

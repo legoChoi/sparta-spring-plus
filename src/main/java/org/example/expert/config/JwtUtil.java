@@ -5,16 +5,13 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.example.expert.domain.user.entity.User;
-import org.example.expert.security.entity.CustomUserDetails;
+import org.example.expert.domain.user.enums.UserRole;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Slf4j(topic = "JwtUtil")
 @Component
@@ -34,18 +31,13 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+    public String generateToken(Long id, String nickname, UserRole role) {
         Date now = new Date();
 
         return BEARER_PREFIX + Jwts.builder()
-                .claim("id", principal.getId().toString())
-                .claim("nickname", principal.getUsername())
-                .claim("role", authorities)
+                .claim("id", id.toString())
+                .claim("nickname", nickname)
+                .claim("role", role.name())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, signatureAlgorithm)

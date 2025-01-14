@@ -7,11 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.JwtUtil;
 import org.example.expert.domain.auth.dto.response.SigninResponse;
+import org.example.expert.security.entity.CustomUserDetails;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +25,8 @@ public class SecurityAuthenticationSuccessHandler extends SimpleUrlAuthenticatio
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String bearerToken = jwtUtil.generateToken(authentication);
+        CustomUserDetails userCustom = (CustomUserDetails) authentication.getPrincipal();
+        String bearerToken = jwtUtil.generateToken(userCustom.getId(), userCustom.getUsername(), userCustom.getUserRole());
         SigninResponse authLoginResponse = new SigninResponse(bearerToken);
 
         response.setContentType("application/json; charset=utf-8");
