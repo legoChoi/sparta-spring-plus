@@ -29,7 +29,9 @@ public class CommentController {
     }
 
     @GetMapping("/todos/{todoId}/comments")
-    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable long todoId) {
+    public ResponseEntity<List<CommentResponse>> getComments(
+            @PathVariable long todoId
+    ) {
         return ResponseEntity.ok(commentService.getComments(todoId));
     }
 }
