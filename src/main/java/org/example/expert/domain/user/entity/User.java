@@ -28,10 +28,20 @@ public class User extends Timestamped {
         this.userRole = userRole;
     }
 
+    private User(Long id, UserRole userRole, String nickname) {
+        this.id = id;
+        this.nickname = nickname;
+        this.userRole = userRole;
+    }
+
     private User(Long id, String email, UserRole userRole) {
         this.id = id;
         this.email = email;
         this.userRole = userRole;
+    }
+
+    public static User fromJwt(Long id, String nickname, String role) {
+        return new User(id, UserRole.of(role), nickname);
     }
 
     public static User fromAuthUser(AuthUser authUser) {
