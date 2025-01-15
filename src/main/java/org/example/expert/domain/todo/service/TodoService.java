@@ -62,7 +62,7 @@ public class TodoService {
 
         if (startDate != null && endDate != null) {
             startDateTime = startDate.atStartOfDay();
-            endDateTime = endDate.atStartOfDay();
+            endDateTime = endDate.atTime(LocalTime.MAX);
         }
 
         Page<Todo> todos = null;
