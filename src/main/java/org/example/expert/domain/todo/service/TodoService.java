@@ -119,4 +119,16 @@ public class TodoService {
 
         return todoRepository.search(title, nickname, startDateTime, endDateTime, pageable);
     }
+
+    @Transactional
+    public void deleteTodo(Long userId, long todoId) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+
+        if (userId != todo.getUser().getId()) {
+            throw new InvalidRequestException("User id mismatch");
+        }
+
+        todoRepository.delete(todo);
+    }
 }
