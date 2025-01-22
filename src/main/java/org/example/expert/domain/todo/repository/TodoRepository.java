@@ -13,14 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificationExecutor<Todo>, TodoQRepository {
-//
-//    @Query("SELECT t FROM Todo t " +
-//            "LEFT JOIN t.user " +
-//            "WHERE t.id = :todoId")
-//    Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId);
-
-
-    // pagination
 
     @EntityGraph(attributePaths = "user")
     Page<Todo> findAll(Pageable pageable);
