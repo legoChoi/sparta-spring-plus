@@ -18,7 +18,8 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private static final long ACCESS_TOKEN_EXP = 30 * 60 * 1000L; // 30분
+    private static final long REFRESH_TOKEN_EXP = 12 * 60 * 60 * 1000L; // 12시간
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -40,7 +41,18 @@ public class JwtUtil {
                 .claim("nickname", nickname)
                 .claim("role", role.name())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + TOKEN_TIME))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXP))
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+
+    public String generateRefreshToken(Long id) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .claim("id", id.toString())
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXP))
                 .signWith(key, signatureAlgorithm)
                 .compact();
     }
@@ -62,14 +74,15 @@ public class JwtUtil {
             Claims claims = jwtParser.parseClaimsJws(token).getBody();
             return claims.getExpiration().after(new Date());
         } catch (SecurityException | MalformedJwtException e) {
-            log.error("유효하지 않는 JWT 서명 입니다.");
+            log.warn("유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
-            log.error("만료된 JWT token 입니다.");
+            log.warn("만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰 입니다.");
+            log.warn("지원되지 않는 JWT 토큰 입니다.");
         } catch (Exception e) {
-            log.error("유효하지 않는 JWT 토큰 입니다.");
+            log.warn("유효하지 않는 JWT 토큰 입니다.");
         }
+
         return false;
     }
 
