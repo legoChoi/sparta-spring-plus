@@ -3,6 +3,7 @@ package org.example.expert.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.JwtUtil;
 import org.example.expert.config.PasswordEncoder;
+import org.example.expert.domain.auth.dto.request.AuthReissueRequest;
 import org.example.expert.domain.auth.dto.request.SignupRequest;
 import org.example.expert.domain.auth.dto.response.SignupResponse;
 import org.example.expert.domain.common.exception.InvalidRequestException;
@@ -44,5 +45,23 @@ public class AuthService {
                 jwtUtil.generateAccessToken(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname(), savedUser.getUserRole()),
                 jwtUtil.generateRefreshToken(savedUser.getId())
         );
+    }
+
+    public void reissueToken(AuthReissueRequest authReissueRequest) {
+        // 요청 refresh token 검증
+        jwtUtil.isValid(authReissueRequest.refreshToken());
+
+        // 요청 refresh token에서 id 추출
+        Long userId = jwtUtil.getUserIdFromToken(authReissueRequest.refreshToken());
+
+        // redis에서 해당 id에 저장된 refresh token 조회
+
+        // refresh token 검증
+
+        // access token, refresh token 생성
+
+        // refresh token redis에 저장 (교체)
+
+        // access token, refresh token 반환
     }
 }

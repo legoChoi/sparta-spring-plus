@@ -100,4 +100,10 @@ public class JwtUtil {
                 .userRole(UserRole.of(claims.get("role", String.class)))
                 .build();
     }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = extractClaims(token);
+
+        return Long.valueOf(claims.get("id", String.class));
+    }
 }
