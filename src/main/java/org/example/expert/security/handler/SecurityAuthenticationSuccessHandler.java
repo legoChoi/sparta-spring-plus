@@ -24,8 +24,9 @@ public class SecurityAuthenticationSuccessHandler extends SimpleUrlAuthenticatio
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails userCustom = (CustomUserDetails) authentication.getPrincipal();
-        String bearerToken = jwtUtil.generateAccessToken(userCustom.getId(), userCustom.getEmail(), userCustom.getUsername(), userCustom.getUserRole());
-        SigninResponse authLoginResponse = new SigninResponse(bearerToken);
+        String accessToken = jwtUtil.generateAccessToken(userCustom.getId(), userCustom.getEmail(), userCustom.getUsername(), userCustom.getUserRole());
+        String refreshToken = jwtUtil.generateRefreshToken(userCustom.getId());
+        SigninResponse authLoginResponse = new SigninResponse(accessToken, refreshToken);
 
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
