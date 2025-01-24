@@ -5,6 +5,7 @@ import org.example.expert.config.JwtUtil;
 import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.auth.dto.request.AuthReissueRequest;
 import org.example.expert.domain.auth.dto.request.SignupRequest;
+import org.example.expert.domain.auth.dto.response.AuthReissueResponse;
 import org.example.expert.domain.auth.dto.response.SignupResponse;
 import org.example.expert.domain.auth.entity.RedisRefreshToken;
 import org.example.expert.domain.auth.exception.AuthException;
@@ -13,6 +14,7 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.example.expert.exception.error.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,21 +59,28 @@ public class AuthService {
         );
     }
 
-    public void reissueToken(AuthReissueRequest authReissueRequest) {
-        // 요청 refresh token 검증
-        jwtUtil.isValid(authReissueRequest.refreshToken());
+    public AuthReissueResponse reissueToken(AuthReissueRequest authReissueRequest) {
+        if (!jwtUtil.isValid(authReissueRequest.refreshToken())) {
+            throw new AuthException(ErrorCode.INVALID_TOKEN_ERROR.getMessage());
+        }
 
-        // 요청 refresh token에서 id 추출
         Long userId = jwtUtil.getUserIdFromToken(authReissueRequest.refreshToken());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AuthException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
-        // redis에서 해당 id에 저장된 refresh token 조회
+        RedisRefreshToken redisRefreshToken =
+                refreshTokenRepository.findById(user.getId())
+                        .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_NOT_FOUND_EXCEPTION.getMessage()));
 
-        // refresh token 검증
+        if (!authReissueRequest.refreshToken().equals(redisRefreshToken.getRefreshToken())) {
+            throw new AuthException(ErrorCode.INVALID_TOKEN_ERROR.getMessage());
+        }
 
-        // access token, refresh token 생성
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getEmail(), user.getNickname(), user.getUserRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
-        // refresh token redis에 저장 (교체)
+        refreshTokenRepository.save(new RedisRefreshToken(user.getId(), refreshToken));
 
-        // access token, refresh token 반환
+        return new AuthReissueResponse(accessToken, refreshToken);
     }
 }
