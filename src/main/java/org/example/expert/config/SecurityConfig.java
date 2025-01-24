@@ -2,6 +2,7 @@ package org.example.expert.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.example.expert.domain.auth.repository.RedisRefreshTokenRepository;
 import org.example.expert.security.filter.CustomAuthenticationFilter;
 import org.example.expert.security.handler.SecurityAccessDeniedHandler;
 import org.example.expert.security.handler.SecurityAuthenticationEntryPoint;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final RedisRefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -69,7 +71,7 @@ public class SecurityConfig {
     public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
         CustomAuthenticationFilter filter = new CustomAuthenticationFilter(objectMapper);
         filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(new SecurityAuthenticationSuccessHandler(jwtUtil, objectMapper));
+        filter.setAuthenticationSuccessHandler(new SecurityAuthenticationSuccessHandler(jwtUtil, objectMapper, refreshTokenRepository));
         filter.setAuthenticationFailureHandler(new SecurityAuthenticationFailureHandler(objectMapper));
 
         filter.setSecurityContextRepository(
