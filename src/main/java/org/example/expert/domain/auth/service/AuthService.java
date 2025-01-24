@@ -41,9 +41,15 @@ public class AuthService {
         );
         User savedUser = userRepository.save(newUser);
 
+        String accessToken = jwtUtil.generateAccessToken(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname(), savedUser.getUserRole());
+        String refreshToken = jwtUtil.generateRefreshToken(savedUser.getId());
+
+        RedisRefreshToken redisRefreshToken = new RedisRefreshToken(savedUser.getId(), refreshToken);
+        refreshTokenRepository.save(redisRefreshToken);
+
         return new SignupResponse(
-                jwtUtil.generateAccessToken(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname(), savedUser.getUserRole()),
-                jwtUtil.generateRefreshToken(savedUser.getId())
+                accessToken,
+                refreshToken
         );
     }
 
