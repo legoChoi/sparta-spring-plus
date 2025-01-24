@@ -6,6 +6,9 @@ import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.auth.dto.request.AuthReissueRequest;
 import org.example.expert.domain.auth.dto.request.SignupRequest;
 import org.example.expert.domain.auth.dto.response.SignupResponse;
+import org.example.expert.domain.auth.entity.RedisRefreshToken;
+import org.example.expert.domain.auth.exception.AuthException;
+import org.example.expert.domain.auth.repository.RedisRefreshTokenRepository;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private final RedisRefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
