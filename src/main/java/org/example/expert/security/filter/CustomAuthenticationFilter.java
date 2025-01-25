@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.expert.domain.auth.dto.request.SigninRequest;
+import org.example.expert.domain.auth.dto.request.AuthSignInRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,17 +31,17 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        SigninRequest authLoginRequest = objectMapper.readValue(request.getReader(), SigninRequest.class);
-        validateAuthLoginRequest(authLoginRequest);
+        AuthSignInRequest authSignInRequest = objectMapper.readValue(request.getReader(), AuthSignInRequest.class);
+        validateAuthLoginRequest(authSignInRequest);
 
-        String email = authLoginRequest.getEmail();
-        String password = authLoginRequest.getPassword();
+        String email = authSignInRequest.email();
+        String password = authSignInRequest.password();
 
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }
 
-    private void validateAuthLoginRequest(SigninRequest authLoginRequest) {
-        if (!StringUtils.hasText(authLoginRequest.getEmail()) || !StringUtils.hasText(authLoginRequest.getPassword())) {
+    private void validateAuthLoginRequest(AuthSignInRequest authLoginRequest) {
+        if (!StringUtils.hasText(authLoginRequest.email()) || !StringUtils.hasText(authLoginRequest.password())) {
             throw new BadCredentialsException("이메일과 비밀번호를 입력해주세요.");
         }
     }
