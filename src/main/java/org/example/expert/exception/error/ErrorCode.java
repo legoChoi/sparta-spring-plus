@@ -20,8 +20,10 @@ public enum ErrorCode {
     // JWT 관련 익셉션
     INVALID_TOKEN_ERROR(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다."),
 
-    REFRESH_TOKEN_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다.")
-    ;
+    REFRESH_TOKEN_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
+
+    // Todo 관련 익셉션
+    TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "투두 게시글이 존재하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
