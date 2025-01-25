@@ -6,7 +6,7 @@ import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.auth.dto.request.AuthReissueRequest;
 import org.example.expert.domain.auth.dto.request.AuthSignupRequest;
 import org.example.expert.domain.auth.dto.response.AuthReissueResponse;
-import org.example.expert.domain.auth.dto.response.SignupResponse;
+import org.example.expert.domain.auth.dto.response.AuthSignupResponse;
 import org.example.expert.domain.auth.entity.RedisRefreshToken;
 import org.example.expert.domain.auth.exception.AuthException;
 import org.example.expert.domain.auth.repository.RedisRefreshTokenRepository;
@@ -29,7 +29,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public SignupResponse signup(AuthSignupRequest signupRequest) {
+    public AuthSignupResponse signup(AuthSignupRequest signupRequest) {
 
         if (userRepository.existsByEmail(signupRequest.email())) {
             throw new InvalidRequestException("이미 존재하는 이메일입니다.");
@@ -53,7 +53,7 @@ public class AuthService {
         RedisRefreshToken redisRefreshToken = new RedisRefreshToken(savedUser.getId(), refreshToken);
         refreshTokenRepository.save(redisRefreshToken);
 
-        return new SignupResponse(
+        return new AuthSignupResponse(
                 accessToken,
                 refreshToken
         );

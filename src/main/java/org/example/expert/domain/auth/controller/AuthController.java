@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.auth.dto.request.AuthReissueRequest;
 import org.example.expert.domain.auth.dto.request.AuthSignupRequest;
 import org.example.expert.domain.auth.dto.response.AuthReissueResponse;
-import org.example.expert.domain.auth.dto.response.SignupResponse;
+import org.example.expert.domain.auth.dto.response.AuthSignupResponse;
 import org.example.expert.domain.auth.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<SignupResponse> signup(
+    public ResponseEntity<AuthSignupResponse> signup(
             @Valid @RequestBody AuthSignupRequest signupRequest
     ) {
         return ResponseEntity.ok()
