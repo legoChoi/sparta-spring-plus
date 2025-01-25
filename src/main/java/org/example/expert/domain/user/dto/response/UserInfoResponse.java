@@ -1,6 +1,6 @@
 package org.example.expert.domain.user.dto.response;
 
-public record UserResponse(
+public record UserInfoResponse(
 
         Long id,
         String nickname,

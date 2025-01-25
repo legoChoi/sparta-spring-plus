@@ -33,7 +33,7 @@ public class CommentService {
                 new InvalidRequestException("Todo not found"));
 
         Comment newComment = new Comment(
-                commentSaveRequest.getContents(),
+                commentSaveRequest.contents(),
                 user,
                 todo
         );

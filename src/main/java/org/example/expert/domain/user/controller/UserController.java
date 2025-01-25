@@ -2,7 +2,7 @@ package org.example.expert.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
-import org.example.expert.domain.user.dto.response.UserResponse;
+import org.example.expert.domain.user.dto.response.UserInfoResponse;
 import org.example.expert.domain.user.service.UserService;
 import org.example.expert.security.entity.CustomUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<UserResponse> getUser(
+    public ResponseEntity<UserInfoResponse> getUser(
             @PathVariable long userId
     ) {
-        return ResponseEntity.ok(userService.getUser(userId));
+        return ResponseEntity.ok()
+                .body(userService.getUser(userId));
     }
 
     @PutMapping("/users")

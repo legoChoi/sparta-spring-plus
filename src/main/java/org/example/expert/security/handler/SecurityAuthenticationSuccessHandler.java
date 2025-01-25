@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.JwtUtil;
-import org.example.expert.domain.auth.dto.response.SigninResponse;
+import org.example.expert.domain.auth.dto.response.AuthSignInResponse;
 import org.example.expert.domain.auth.entity.RedisRefreshToken;
 import org.example.expert.domain.auth.repository.RedisRefreshTokenRepository;
 import org.example.expert.security.entity.CustomUserDetails;
@@ -36,6 +36,6 @@ public class SecurityAuthenticationSuccessHandler extends SimpleUrlAuthenticatio
 
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(objectMapper.writeValueAsString(new SigninResponse(accessToken, refreshToken)));
+        response.getWriter().write(objectMapper.writeValueAsString(new AuthSignInResponse(accessToken, refreshToken)));
     }
 }

@@ -1,6 +1,7 @@
 package org.example.expert.domain.auth.dto.response;
 
-public record AuthReissueResponse(
+
+public record AuthSignInResponse(
 
         String accessToken,
         String refreshToken
