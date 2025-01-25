@@ -19,8 +19,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public SignupResponse signup(@Valid @RequestBody AuthSignupRequest signupRequest) {
-        return authService.signup(signupRequest);
+    public ResponseEntity<SignupResponse> signup(
+            @Valid @RequestBody AuthSignupRequest signupRequest
+    ) {
+        return ResponseEntity.ok()
+                .body(authService.signup(signupRequest));
     }
 
     @PostMapping("/auth/reissue")
