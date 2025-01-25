@@ -11,6 +11,8 @@ import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
+import org.example.expert.exception.error.ErrorCode;
+import org.example.expert.exception.exception.NotFoundException;
 import org.example.expert.security.entity.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -97,7 +99,7 @@ public class TodoService {
 
     public TodoResponse getTodo(long todoId) {
         Todo todo = todoRepository.findByIdWithUser(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TODO_NOT_FOUND));
 
         User user = todo.getUser();
 
