@@ -27,7 +27,8 @@ public class TodoController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody TodoSaveRequest todoSaveRequest
     ) {
-        return ResponseEntity.ok(todoService.saveTodo(userDetails, todoSaveRequest));
+        return ResponseEntity.ok()
+                .body(todoService.saveTodo(userDetails, todoSaveRequest));
     }
 
     @GetMapping("/todos")
@@ -38,7 +39,8 @@ public class TodoController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
             ) {
-        return ResponseEntity.ok(todoService.getTodos(page, size, weather, startDate, endDate));
+        return ResponseEntity.ok()
+                .body(todoService.getTodos(page, size, weather, startDate, endDate));
     }
 
     @GetMapping("/todos/search")
@@ -50,16 +52,16 @@ public class TodoController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
     ) {
-
-
-        return ResponseEntity.ok(todoService.search(page, size, title, nickname, startDate, endDate));
+        return ResponseEntity.ok()
+                .body(todoService.search(page, size, title, nickname, startDate, endDate));
     }
 
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<TodoResponse> getTodo(
             @PathVariable long todoId
     ) {
-        return ResponseEntity.ok(todoService.getTodo(todoId));
+        return ResponseEntity.ok()
+                .body(todoService.getTodo(todoId));
     }
 
     @DeleteMapping("/todos/{todoId}")
@@ -68,6 +70,8 @@ public class TodoController {
             @PathVariable long todoId
     ) {
         todoService.deleteTodo(userDetails.getId(), todoId);
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok()
+                .build();
     }
 }

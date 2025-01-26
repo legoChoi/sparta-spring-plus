@@ -2,7 +2,6 @@ package org.example.expert.domain.todo.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.example.expert.domain.comment.entity.QComment.comment;
 import static org.example.expert.domain.manager.entity.QManager.manager;
 import static org.example.expert.domain.todo.entity.QTodo.todo;
 import static org.example.expert.domain.user.entity.QUser.user;
@@ -45,36 +43,39 @@ public class TodoQRepositoryImpl implements TodoQRepository {
 
         // 조회 컬럼들 : 일정 제목, 담당자 수, 댓글 수
         // 첫번째 트라이: group by 사용한 집계 함수로 담당자 수, 댓글 수 집계
+        // 두번째 트라이: 담당자 수, 댓글 수 역정규화를 위한 Todos 테이블 컬럼 추가
 
         List<TodoSearchResponse> records = queryFactory
                 .select(
                         Projections.constructor(
                                 TodoSearchResponse.class,
+                                todo.id,
                                 todo.title,
-                                manager.id.countDistinct().as("managerCount"),
-                                comment.id.countDistinct().as("commentCount")
+                                todo.managerCount,
+                                todo.commentCount
                         )
                 )
                 .from(todo)
                 .leftJoin(todo.managers, manager)
                 .leftJoin(manager.user, user)
-                .leftJoin(todo.comments, comment)
                 .where(
                         addTitleCondition(title),
                         addManagerNicknameCondition(nickname),
                         addStartDateCondition(startDate),
                         addEndDateCondition(endDate)
                 )
+                .groupBy(todo.id)
                 .orderBy(todo.createdAt.desc())
-                .groupBy(todo.id, todo.title)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
 
         Long totalCount = queryFactory
-                .select(Wildcard.count)
+                .select(todo.countDistinct())
                 .from(todo)
+                .leftJoin(todo.managers, manager)
+                .leftJoin(manager.user, user)
                 .where(
                         addTitleCondition(title),
                         addManagerNicknameCondition(nickname),

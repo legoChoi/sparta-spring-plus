@@ -8,8 +8,7 @@ import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.manager.entity.Manager;
 import org.example.expert.domain.user.entity.User;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,12 @@ public class Todo extends Timestamped {
     private String title;
     private String contents;
     private String weather;
+
+    @ColumnDefault("0")
+    private Integer commentCount;
+
+    @ColumnDefault("0")
+    private Integer managerCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -42,5 +47,21 @@ public class Todo extends Timestamped {
         this.weather = weather;
         this.user = user;
         this.managers.add(new Manager(user, this));
+    }
+
+    public void incrementCommentCount() {
+        this.commentCount++;
+    }
+
+    public void decrementCommentCount() {
+        this.commentCount--;
+    }
+
+    public void incrementManagerCount() {
+        this.managerCount++;
+    }
+
+    public void decrementManagerCount() {
+        this.managerCount--;
     }
 }
