@@ -29,14 +29,16 @@ public class CommentService {
     @Transactional
     public CommentSaveResponse saveComment(CustomUserDetails userDetails, long todoId, CommentSaveRequest commentSaveRequest) {
         User user = User.fromUserDetails(userDetails);
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException("Todo not found"));
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
 
         Comment newComment = new Comment(
                 commentSaveRequest.contents(),
                 user,
                 todo
         );
+
+        todo.incrementCommentCount();
 
         Comment savedComment = commentRepository.save(newComment);
 

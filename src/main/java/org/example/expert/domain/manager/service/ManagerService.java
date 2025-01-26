@@ -56,6 +56,8 @@ public class ManagerService {
         Manager newManagerUser = new Manager(managerUser, todo);
         Manager savedManagerUser = managerRepository.save(newManagerUser);
 
+        todo.incrementManagerCount();
+
         return new ManagerSaveResponse(
                 savedManagerUser.getId(),
                 new UserResponse(managerUser.getId(), managerUser.getNickname(), managerUser.getEmail())
@@ -98,5 +100,6 @@ public class ManagerService {
         }
 
         managerRepository.delete(manager);
+        todo.decrementManagerCount();
     }
 }
