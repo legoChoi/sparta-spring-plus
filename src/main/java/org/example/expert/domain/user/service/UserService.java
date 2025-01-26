@@ -10,6 +10,8 @@ import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,6 +25,13 @@ public class UserService {
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
 
         return new UserInfoResponse(user.getId(), user.getNickname(), user.getEmail());
+    }
+
+    public List<UserInfoResponse> getUserByNickname(String nickname) {
+        List<User> userList = userRepository.findByNickname(nickname);
+
+        return userList.stream()
+                .map(UserInfoResponse::of).toList();
     }
 
     @Transactional

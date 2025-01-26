@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -21,6 +23,14 @@ public class UserController {
     ) {
         return ResponseEntity.ok()
                 .body(userService.getUser(userId));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserInfoResponse>> getUserByNickname(
+            @RequestParam String nickname
+    ) {
+        return ResponseEntity.ok()
+                .body(userService.getUserByNickname(nickname));
     }
 
     @PutMapping("/users")
