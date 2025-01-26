@@ -64,6 +64,7 @@ public class TodoQRepositoryImpl implements TodoQRepository {
                         addStartDateCondition(startDate),
                         addEndDateCondition(endDate)
                 )
+                .groupBy(todo.id)
                 .orderBy(todo.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
