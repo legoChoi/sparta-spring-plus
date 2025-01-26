@@ -1,6 +1,6 @@
-프로젝트 요구사항
+## 프로젝트 요구사항
 
-- 필수 요구사항
+### 필수 요구사항
 
 1. 퀴즈 - 코드 개선
 2. 퀴즈 - JWT의 이해 
@@ -17,7 +17,7 @@
 9. Spring Security 적용
 
 
-- 도전 과제
+### 도전 과제
 
 1. QueryDSL을 활용한 여러 조건으로 페이지네이션 적용
    - 동적 검색 조건(BooleanExpression) 활용
@@ -30,13 +30,13 @@
 
 ---
 
-Refresh Token 추가
+### Refresh Token 추가
 
 1. Refresh Token 저장 로직들 
    - 회원가입 or 로그인 시 클라이언트에 Access Token과 Refresh Token을 응답해주고 Refresh Token을 Redis에 저장한다. 
    - 사용자가 Access Token 재발급 API를 보내면 Refresh Token을 확인하고 해당 user_id를 key로 가지는 refresh_token과 요청으로 받은 Refresh Token을 비교해서 동일하면 Redis에 새로운 Refresh Token을 저장하고 클라이언트에 응답한다.
 
-User 테이블 검색 성능 개선 - nickname 컬럼 인덱싱
+### User 테이블 검색 성능 개선 - nickname 컬럼 인덱싱
 
 1. 시간 비교
    - 인덱싱 전
