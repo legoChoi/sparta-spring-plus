@@ -29,10 +29,10 @@
    - index 적용 (unique index X)
 
 ### 미완료 목록
--[ ] Docker & AWS 
--[ ] Kotlin 마이그레이션
--[ ] 리팩토링
--[ ] 추가 성능 개선
+- [ ] Docker & AWS 
+- [ ] Kotlin 마이그레이션
+- [ ] 리팩토링
+- [ ] 추가 성능 개선
 
 ---
 
