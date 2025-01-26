@@ -28,6 +28,12 @@
 3. User nickname 조회 시 성능 최적화
    - index 적용 (unique index X)
 
+### 미완료 목록
+-[ ] Docker & AWS 
+-[ ] Kotlin 마이그레이션
+-[ ] 리팩토링
+-[ ] 추가 성능 개선
+
 ---
 
 ### Refresh Token 추가
@@ -49,3 +55,6 @@
      ![인덱싱 전 실행 계획](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FG4XdO%2FbtsL1Wc6xF0%2FsdJw8keAMA8QBzHhmCBvU1%2Fimg.png)
    - 인덱싱 후
      ![인덱싱 전 실행 계획](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fpm8fD%2FbtsL1GaywwN%2FMq5jusbPepOISsRItbMA8k%2Fimg.png)
+
+---
+> https://itak.tistory.com/19
