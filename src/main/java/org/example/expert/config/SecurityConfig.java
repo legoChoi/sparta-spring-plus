@@ -45,11 +45,11 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // 접근 권한
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()        // 모든 권한 허용
-                        .requestMatchers("/users/**").hasRole("USER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())                      // 나머지 요청들은 인증 필요
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/auth/**").permitAll()        // 모든 권한 허용
+//                        .requestMatchers("/users/**").hasRole("USER")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated())                      // 나머지 요청들은 인증 필요
 
                 // filter
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
