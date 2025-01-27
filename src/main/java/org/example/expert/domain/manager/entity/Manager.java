@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.user.entity.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -18,8 +20,10 @@ public class Manager {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false) // 일정 만든 사람 id
     private User user;
+
     @ManyToOne(fetch = FetchType.LAZY) // 일정 id
     @JoinColumn(name = "todo_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Todo todo;
 
     public Manager(User user, Todo todo) {

@@ -6,12 +6,13 @@ import org.example.expert.domain.comment.dto.response.CommentResponse;
 import org.example.expert.domain.comment.dto.response.CommentSaveResponse;
 import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.comment.repository.CommentRepository;
-import org.example.expert.domain.common.dto.AuthUser;
-import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
+import org.example.expert.exception.error.ErrorCode;
+import org.example.expert.exception.exception.NotFoundException;
+import org.example.expert.security.entity.CustomUserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,23 +28,25 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
-        User user = User.fromAuthUser(authUser);
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException("Todo not found"));
+    public CommentSaveResponse saveComment(CustomUserDetails userDetails, long todoId, CommentSaveRequest commentSaveRequest) {
+        User user = User.fromUserDetails(userDetails);
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TODO_NOT_FOUND));
 
         Comment newComment = new Comment(
-                commentSaveRequest.getContents(),
+                commentSaveRequest.contents(),
                 user,
                 todo
         );
+
+        todo.incrementCommentCount();
 
         Comment savedComment = commentRepository.save(newComment);
 
         return new CommentSaveResponse(
                 savedComment.getId(),
                 savedComment.getContents(),
-                new UserResponse(user.getId(), user.getEmail())
+                new UserResponse(user.getId(), user.getNickname(), user.getEmail())
         );
     }
 
@@ -56,7 +59,7 @@ public class CommentService {
             CommentResponse dto = new CommentResponse(
                     comment.getId(),
                     comment.getContents(),
-                    new UserResponse(user.getId(), user.getEmail())
+                    new UserResponse(user.getId(), user.getNickname(), user.getEmail())
             );
             dtoList.add(dto);
         }
