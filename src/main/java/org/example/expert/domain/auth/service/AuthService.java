@@ -8,13 +8,14 @@ import org.example.expert.domain.auth.dto.request.AuthSignupRequest;
 import org.example.expert.domain.auth.dto.response.AuthReissueResponse;
 import org.example.expert.domain.auth.dto.response.AuthSignupResponse;
 import org.example.expert.domain.auth.entity.RedisRefreshToken;
-import org.example.expert.domain.auth.exception.AuthException;
 import org.example.expert.domain.auth.repository.RedisRefreshTokenRepository;
-import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
 import org.example.expert.exception.error.ErrorCode;
+import org.example.expert.exception.exception.BadRequestException;
+import org.example.expert.exception.exception.NotFoundException;
+import org.example.expert.exception.exception.UnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class AuthService {
     public AuthSignupResponse signup(AuthSignupRequest signupRequest) {
 
         if (userRepository.existsByEmail(signupRequest.email())) {
-            throw new InvalidRequestException("이미 존재하는 이메일입니다.");
+            throw new BadRequestException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.password());
@@ -61,19 +62,19 @@ public class AuthService {
 
     public AuthReissueResponse reissueToken(AuthReissueRequest authReissueRequest) {
         if (!jwtUtil.isValid(authReissueRequest.refreshToken())) {
-            throw new AuthException(ErrorCode.INVALID_TOKEN_ERROR.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN_ERROR);
         }
 
         Long userId = jwtUtil.getUserIdFromToken(authReissueRequest.refreshToken());
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AuthException(ErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         RedisRefreshToken redisRefreshToken =
                 refreshTokenRepository.findById(user.getId())
-                        .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_NOT_FOUND_EXCEPTION.getMessage()));
+                        .orElseThrow(() -> new NotFoundException(ErrorCode.REFRESH_TOKEN_NOT_FOUND_EXCEPTION));
 
         if (!authReissueRequest.refreshToken().equals(redisRefreshToken.getRefreshToken())) {
-            throw new AuthException(ErrorCode.INVALID_TOKEN_ERROR.getMessage());
+            throw new UnauthorizedException(ErrorCode.INVALID_TOKEN_ERROR);
         }
 
         String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getEmail(), user.getNickname(), user.getUserRole());

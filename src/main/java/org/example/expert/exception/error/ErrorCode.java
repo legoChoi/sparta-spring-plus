@@ -14,6 +14,7 @@ public enum ErrorCode {
     SAME_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, "새 비밀번호는 기존 비밀번호와 같을 수 없습니다."),
     INVALID_PASSWORD_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않은 비밀번호 입니다."),
     WRONG_PASSWORD_PATTERN(HttpStatus.BAD_REQUEST, "새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다."),
+    EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
 
     // Security 관련 익셉션
     LOGIN_FAILED_EXCEPTION(HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다."),
