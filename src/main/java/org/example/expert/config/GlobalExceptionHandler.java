@@ -4,6 +4,7 @@ import org.example.expert.domain.auth.exception.AuthException;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.common.exception.ServerException;
 import org.example.expert.exception.exception.BadRequestException;
+import org.example.expert.exception.exception.ForbiddenException;
 import org.example.expert.exception.exception.NotFoundException;
 import org.example.expert.exception.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Map<String, Object>> unauthorizedExceptionException(UnauthorizedException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return getErrorResponse(status, ex.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> forbiddenExceptionException(ForbiddenException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
         return getErrorResponse(status, ex.getMessage());
     }
 
