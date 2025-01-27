@@ -2,7 +2,6 @@ package org.example.expert.domain.todo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
-import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
@@ -12,6 +11,7 @@ import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.exception.error.ErrorCode;
+import org.example.expert.exception.exception.ForbiddenException;
 import org.example.expert.exception.exception.NotFoundException;
 import org.example.expert.security.entity.CustomUserDetails;
 import org.springframework.data.domain.Page;
@@ -125,10 +125,10 @@ public class TodoService {
     @Transactional
     public void deleteTodo(Long userId, long todoId) {
         Todo todo = todoRepository.findById(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TODO_NOT_FOUND));
 
         if (userId != todo.getUser().getId()) {
-            throw new InvalidRequestException("User id mismatch");
+            throw new ForbiddenException(ErrorCode.AUTHORIZATION_EXCEPTION);
         }
 
         todoRepository.delete(todo);

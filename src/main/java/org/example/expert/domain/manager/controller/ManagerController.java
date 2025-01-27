@@ -25,14 +25,16 @@ public class ManagerController {
             @PathVariable long todoId,
             @Valid @RequestBody ManagerSaveRequest managerSaveRequest
     ) {
-        return ResponseEntity.ok(managerService.saveManager(userDetails, todoId, managerSaveRequest));
+        return ResponseEntity.ok()
+                .body(managerService.saveManager(userDetails.getId(), todoId, managerSaveRequest));
     }
 
     @GetMapping("/todos/{todoId}/managers")
     public ResponseEntity<List<ManagerResponse>> getMembers(
             @PathVariable long todoId
     ) {
-        return ResponseEntity.ok(managerService.getManagers(todoId));
+        return ResponseEntity.ok()
+                .body(managerService.getManagers(todoId));
     }
 
     @DeleteMapping("/todos/{todoId}/managers/{managerId}")
