@@ -24,6 +24,11 @@ public enum ErrorCode {
     INVALID_TOKEN_ERROR(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다."),
     REFRESH_TOKEN_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
 
+    // Manager 관련 익셉션
+    MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "관리 매니저가 존재하지 않습니다."),
+    MANAGER_SELF_ASSIGNMENT_EXCEPTION(HttpStatus.BAD_REQUEST, "일정 작성자는 본인을 담당자로 등록할 수 없습니다."),
+    NOT_ASSIGNED_MANAGER_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 일정에 등록된 담당자가 아닙니다."),
+
     // Todo 관련 익셉션
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "투두 게시글이 존재하지 않습니다.");
 
